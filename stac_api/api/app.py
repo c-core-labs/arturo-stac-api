@@ -40,7 +40,8 @@ def create_app(settings: ApiSettings) -> FastAPI:
 
     app.debug = settings.debug
     app.include_router(
-        create_core_router(core_client, settings), tags=["Core Endpoints"]
+        create_core_router(core_client, settings), tags=["Core Endpoints"],
+        dependencies=[Depends(oauth2_scheme)]
     )
     add_exception_handlers(app, DEFAULT_STATUS_CODES)
 
@@ -62,7 +63,7 @@ def create_app(settings: ApiSettings) -> FastAPI:
         transaction_client = TransactionsClient()
         app.include_router(
             create_transactions_router(transaction_client, settings),
-            tags=["Transaction Extension"],
+            tags=["Transaction Extension"], dependencies=[Depends(oauth2_scheme)]
         )
 
     if settings.add_on_is_enabled(AddOns.tiles):
@@ -76,8 +77,9 @@ def create_app(settings: ApiSettings) -> FastAPI:
             methods=["GET"],
             endpoint=create_endpoint_with_depends(tiles_client.get_item_tiles, ItemUri),
             tags=["OGC Tiles"],
+            dependencies=[Depends(oauth2_scheme)]
         )
-        app.include_router(create_tiles_router(), prefix="/titiler", tags=["Titiler"])
+        app.include_router(create_tiles_router(), prefix="/titiler", tags=["Titiler"], dependencies=[Depends(oauth2_scheme)])
 
     config_openapi(app)
 
