@@ -1,4 +1,4 @@
-# arturo-stac-api ![arturo-stac-api](https://github.com/arturo-ai/arturo-stac-api/workflows/arturo-stac-api/badge.svg)
+# stac-api ![stac-api](https://github.com/c-core-labs/stac-api/workflows/arturo-stac-api/badge.svg)
 ---
 
 **Documentation**: coming soon...
@@ -102,4 +102,18 @@ Run local:
 
 ``` bash
 docker run --rm -it -p 8080:8080 gcr.io/ln-sherlock/stac-api:latest
+```
+
+## Development
+Install dependencies:
+
+``` bash
+pipenv install
+pipenv shell
+```
+
+Run in development mode:
+
+``` bash
+uvicorn stac_api.app:app --port 8080 --reload
 ```
