@@ -8,6 +8,7 @@ from fastapi.encoders import jsonable_encoder
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from starlette.requests import Request
+from starlette.middleware.cors import CORSMiddleware
 
 from stac_api.api.models import ItemUri, Login
 from stac_api.api.routers import (
@@ -44,6 +45,12 @@ def create_app(settings: ApiSettings) -> FastAPI:
         dependencies=[Depends(oauth2_scheme)]
     )
     add_exception_handlers(app, DEFAULT_STATUS_CODES)
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_headers=["*"],
+    )
 
     @app.exception_handler(RequestValidationError)
     async def validation_exception_handler(request: Request,
